@@ -46,6 +46,7 @@
     "ssb-revisions": "^1.2.1",
     "tape": "^4.9.2",
     "tre-client": "^2.1.1",
+    "tre-editor-shell": "^1.3.0",
     "tre-file-importer": "^2.1.0",
     "tre-finder": "^2.3.0",
     "tre-prototypes": "^1.6.0",

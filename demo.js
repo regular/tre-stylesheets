@@ -1,5 +1,6 @@
 const {client} = require('tre-client')
 const Styles = require('.')
+const Shell = require('tre-editor-shell')
 const h = require('mutant/html-element')
 const setStyle = require('module-styles')('tre-styles-demo')
 const Finder = require('tre-finder')
@@ -71,11 +72,19 @@ client( (err, ssb, config) => {
     }
   })
 
+  const renderShell = Shell(ssb, {
+    save: (kv, cb) => {
+      ssb.publish(kv.value.content, cb)
+    }
+  })
+
   const renderStyle = Styles(ssb, {
     ace_theme: 'ace/theme/twilight'
   })
 
   const where = Value('editor')
+  let current_kv
+  let current_where
 
   document.body.appendChild(h('.tre-images-demo', [
     makeSplitPane({horiz: true}, [
@@ -95,7 +104,25 @@ client( (err, ssb, config) => {
             h('option', 'thumbnail')
           ])
         ]),
-        computed([where, merged_kv], (where, kv) => kv ? renderStyle(kv, {where}) : [])
+        computed([where, merged_kv], (where, kv) => {
+          if (
+            revisionRoot(kv) == revisionRoot(current_kv) &&
+            where == current_where
+          ) return computed.NO_CHANGE
+          current_kv = kv
+          current_where = where
+          if (!kv) return []
+
+          if (where !== 'editor') {
+            return renderStyle(kv, {where})  
+          }
+          const contentObs = Value(Object.assign({}, kv.value.content))
+          return renderShell(kv, {
+            renderEditor: renderStyle,
+            contentObs,
+            where: 'editor'
+          })
+        })
       ])
     ])
   ]))
@@ -105,3 +132,6 @@ function content(kv) {
   return kv && kv.value && kv.value.content
 }
 
+function revisionRoot(kv) {
+  return kv && kv.value.content && kv.value.content.revisionRoot || kv && kv.key
+}
