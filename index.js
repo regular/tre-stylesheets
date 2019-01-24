@@ -40,7 +40,7 @@ function RenderEditor(ssb, opts) {
     const contentObs = ctx.contentObs || Value()
     contentObs.set(content)
 
-    const compact = where == 'compact-editor'
+    const compact = ctx.where == 'compact-editor'
 
     renderStr = Str({
       save: text => {

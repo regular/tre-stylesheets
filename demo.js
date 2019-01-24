@@ -86,7 +86,7 @@ client( (err, ssb, config) => {
   let current_kv
   let current_where
 
-  document.body.appendChild(h('.tre-images-demo', [
+  document.body.appendChild(h('.tre-stylesheets-demo', [
     makeSplitPane({horiz: true}, [
       makePane('25%', [
         renderFinder(config.tre.branches.stylesheets || config.tre.branches.root)
