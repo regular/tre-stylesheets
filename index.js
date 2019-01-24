@@ -15,8 +15,13 @@ setStyle(`
 `)
 
 function renderCSS(kv, ctx) {
-  const content = kv.value && kv.value.content
-  const css = content && content.css || ''
+  const content = kv && kv.value && kv.value.content
+  let css = content && content.css || ''
+  if (ctx && ctx.contentObs) {
+    css = computed(ctx.contentObs, content => {
+      return content && content.css || ''
+    })
+  }
   return h('style', {
     attributes: {
       'data-key': kv.key
@@ -35,6 +40,8 @@ function RenderEditor(ssb, opts) {
     const contentObs = ctx.contentObs || Value()
     contentObs.set(content)
 
+    const compact = where == 'compact-editor'
+
     renderStr = Str({
       save: text => {
         name.set(text)
@@ -47,6 +54,10 @@ function RenderEditor(ssb, opts) {
     const editor = ace.edit(pre)
     if (opts.ace_theme) editor.setTheme(opts.ace_theme)
     editor.session.setMode('ace/mode/css')
+
+    if (ctx.where == 'compact-editor') {
+      editor.renderer.setShowGutter(false)
+    }
 
     editor.session.on('change', Changes(editor, 600, (err, content) => {
       contentLength.set(content.css.length)
@@ -78,11 +89,12 @@ function RenderEditor(ssb, opts) {
       setNewContent(newContent)
     })
 
-    return h('.tre-stylesheet-editor', {
+    return h(`.tre-stylesheet-editor${compact ? '.compact': ''}`, {
       hooks: [el => abort]
     }, [
       h('h1', renderStr(computed(name, n => n ? n : 'No Name'))),
       pre,
+      ctx.where == 'compact-editor' ? renderCSS(kv, ctx) : [],
       h('div', [
         h('span.bytesLeft', computed(contentLength, len => `${8192 - 512 - len} characters left`)),
         h('span.error', syntaxError)
@@ -102,7 +114,7 @@ module.exports = function(ssb, opts) {
 
     if (ctx.where == 'thumbnail') {
       return h('pre', 'css')
-    } else if (ctx.where == 'editor') {
+    } else if (ctx.where == 'editor' || ctx.where == 'compact-editor') {
       return renderEditor(kv, ctx)
     } else if (ctx.where == 'tile') {
       return

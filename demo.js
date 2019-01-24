@@ -100,6 +100,7 @@ client( (err, ssb, config) => {
             }
           }, [
             h('option', 'editor'),
+            h('option', 'compact-editor'),
             h('option', 'stage'),
             h('option', 'thumbnail')
           ])
@@ -113,14 +114,14 @@ client( (err, ssb, config) => {
           current_where = where
           if (!kv) return []
 
-          if (where !== 'editor') {
+          if (where !== 'editor' && where !== 'compact-editor') {
             return renderStyle(kv, {where})  
           }
           const contentObs = Value(Object.assign({}, kv.value.content))
           return renderShell(kv, {
             renderEditor: renderStyle,
             contentObs,
-            where: 'editor'
+            where
           })
         })
       ])
