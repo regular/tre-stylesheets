@@ -2,7 +2,7 @@ const {client} = require('tre-client')
 const Styles = require('.')
 const Shell = require('tre-editor-shell')
 const h = require('mutant/html-element')
-const setStyle = require('module-styles')('tre-styles-demo')
+const setStyle = require('module-styles')('tre-stylesheets-demo')
 const Finder = require('tre-finder')
 const Importer = require('tre-file-importer')
 const WatchMerged = require('tre-prototypes')
@@ -13,7 +13,7 @@ const computed = require('mutant/computed')
 require('brace/theme/twilight')
 
 setStyle(`
-  body, html, .tre-images-demo {
+  body, html, .tre-stylesheets-demo {
     height: 100%;
     margin: 0;
     padding: 0;
