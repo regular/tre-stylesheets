@@ -61,8 +61,6 @@ client( (err, ssb, config) => {
   const importer = Importer(ssb, config)
   importer.use(require('./common'))
   
-  console.log('common', require('./common'))
-
   const renderFinder = Finder(ssb, {
     importer,
     primarySelection,
