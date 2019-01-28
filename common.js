@@ -2,18 +2,22 @@ const pull = require('pull-stream')
 const BufferList = require('bl')
 
 module.exports = {
-  importFile,
+  importFiles,
   factory
 }
 
-function importFile(ssb, file, source, opts, cb) {
+function importFiles(ssb, files, opts, cb) {
   opts = opts || {}
   const prototypes = opts.prototypes || {}
+  if (!prototypes) return cb(new Error('no prototypes'))
+  if (files.length>1) return cb(true) // we don't do multiple files
+  const file = files[0]
   const fileProps = Object.assign({}, file)
+  delete fileProps.source
   if (file.type !== 'text/css') return cb(true)
   const bl = BufferList()
   pull(
-    source,
+    file.source(),
     pull.drain( buffer => bl.append(buffer), err  => {
       if (err) return cb(err)
       const css = bl.toString()
