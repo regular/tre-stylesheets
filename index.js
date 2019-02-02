@@ -5,6 +5,7 @@ const watch = require('mutant/watch')
 const setStyle = require('module-styles')('tre-stylesheets')
 const Str = require('tre-string')
 const ace = require('brace')
+const {importFiles, factory} = require('./common')
 require('brace/mode/css')
 
 setStyle(`
@@ -109,6 +110,11 @@ module.exports = function(ssb, opts) {
 
   }
 }
+
+module.exports.importFiles = importFiles
+module.exports.factory = factory
+
+// -- utils
 
 function Changes(editor, ms, cb) {
   return debounce(ms, ()=>{
