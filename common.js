@@ -12,8 +12,8 @@ function importFiles(ssb, files, opts, cb) {
   if (!prototypes) return cb(new Error('no prototypes'))
   if (files.length>1) return cb(true) // we don't do multiple files
   const file = files[0]
-  const fileProps = Object.assign({}, file)
-  delete fileProps.source
+  const fileProps = getFileProps(file)
+
   if (file.type !== 'text/css') return cb(true)
   const bl = BufferList()
   pull(
@@ -65,5 +65,16 @@ function factory(config) {
         prototype: config.tre.prototypes[type]
       }
     }
+  }
+}
+// -- utils
+
+function getFileProps(file) {
+  // Object.assign does not work with file objects
+  return {
+    lastModified: file.lastModified,
+    name: file.name,
+    size: file.size,
+    type: file.type,
   }
 }
