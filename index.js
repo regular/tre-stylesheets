@@ -65,7 +65,7 @@ module.exports = function(ssb, opts) {
       if (opts.ace_theme) editor.setTheme(opts.ace_theme)
       editor.session.setMode('ace/mode/css')
 
-      editor.session.on('change', Changes(editor, 600, (err, content) => {
+      editor.session.on('change', Changes(editor, 20, (err, content) => {
         set(content)
       }))
 
