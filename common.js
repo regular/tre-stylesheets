@@ -48,6 +48,7 @@ function factory(config) {
     prototype: function() {
       return {
         type,
+        css: '',
         schema: {
           description: 'A cascading stylesheet (CSS)',
           type: 'object',

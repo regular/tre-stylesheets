@@ -84,7 +84,7 @@ module.exports = function(ssb, opts) {
 
         const currentPosition = editor.selection.getCursor()
         const scrollTop = editor.session.getScrollTop()
-        editor.session.setValue(newContent.css)
+        editor.session.setValue(newContent.css || '')
         editor.clearSelection()
         editor.gotoLine(currentPosition.row + 1, currentPosition.column);
         editor.session.setScrollTop(scrollTop)
